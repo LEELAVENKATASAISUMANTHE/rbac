@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser';
 import roleRouter from './routers/role.route.js';
 import permissionRouter from './routers/permission.route.js';
 import rolePermissionRouter from './routers/rolePermission.route.js';
-import { simpleAuth } from './utils/simpleAuth.js';
 
 const app = express();
 app.use(cors());
@@ -34,9 +33,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'] // Or specific headers you use
 
   }));
-
-// Authentication middleware (apply to all protected routes)
-app.use('/api', simpleAuth);
 
 // Routes
 app.use('/api/roles', roleRouter);
