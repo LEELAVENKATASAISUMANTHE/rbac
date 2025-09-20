@@ -1,0 +1,38 @@
+import { getclient } from "./dbset.js";
+import { handlePostgresError } from "../utils/postgresErrorHandler.js";
+
+const createpermission = async(name, description)=>{
+    const client = await getclient();
+    try {
+        const res = await client.query("INSERT INTO permissions (name, description) VALUES ($1, $2) RETURNING *", [name, description]);
+        return res.rows[0];
+    } catch (error) {
+        handlePostgresError(error);
+    } finally {
+        client.release();
+    }
+};
+const getpermissionbyid = async(id)=>{
+    const client = await getclient();
+    try {
+        const res = await client.query("SELECT * FROM permissions WHERE id = $1", [id]);
+        return res.rows[0];
+    } catch (error) {
+        handlePostgresError(error);
+    } finally {
+        client.release();
+    }
+};
+const getallpermissions = async()=>{
+    const client = await getclient();
+    try {
+        const res = await client.query("SELECT * FROM permissions");
+        return res.rows;
+    } catch (error) {
+        handlePostgresError(error);
+    } finally {
+        client.release();
+    }
+};
+
+export { createpermission, getpermissionbyid, getallpermissions };
