@@ -16,6 +16,9 @@ app.use(express.urlencoded({ //middleware to take care of url encodeing
 app.use(express.static("public"));
 app.use(cookieParser());
 const allowedOrigins = [
+    'http://localhost:4001',
+    'http://localhost:3000',
+    'http://localhost:5000'
   ];
 app.set("trust proxy", 1);
 app.use(cors({
