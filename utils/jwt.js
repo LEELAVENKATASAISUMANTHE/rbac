@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 
 export const simpleAuth = (req, res, next) => {
     const authHeader = req.headers.authorization;
-
     if (!authHeader) {
         return res.status(401).json({
           success:false,
@@ -11,10 +10,16 @@ export const simpleAuth = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
+    console.log("Token:", token);
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) {
-            return res.sendStatus(403);
+          console.error('JWT verification error:', err);
+            return res.status(403).json({
+              success:false,
+              message:'Invalid token',
+              erreor: err.message
+            });
         }
         req.user = user;
         next();
