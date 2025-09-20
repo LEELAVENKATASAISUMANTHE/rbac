@@ -35,8 +35,9 @@ app.use(cors({
   }));
 
 // Routes
-app.use('/api/roles', roleRouter);
-app.use('/api/permissions', permissionRouter);
-app.use('/api/role-permissions', rolePermissionRouter);
+
+app.use('/roles', roleRouter);
+app.use('/permissions', permissionRouter);
+app.use('/role-permissions', rolePermissionRouter);
 
 export default app;
