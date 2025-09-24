@@ -9,7 +9,11 @@ const PORT = process.env.PORT || 4001;
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`url for the server is http://localhost:${PORT}`);
-  await dbtestrun();
+  try {
+    await dbtestrun();
+  } catch (err) {
+    console.warn('Database test query failed on startup (continuing without DB):', err.message || err);
+  }
 });
 
 app.get('/',simpleAuth,async (req, res) => {

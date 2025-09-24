@@ -1,4 +1,4 @@
-import { assignpermissiontorole, removepermissionfromrole, getpermissionsbyroleid, checkAccess, checkUserAccess } from '../db/rolepermission.db.js';
+import { assignpermissiontorole, removepermissionfromrole, getpermissionsbyroleid, checkAccess } from '../db/rolepermission.db.js';
 
 /**
  * Get all permissions for a specific role
@@ -75,11 +75,10 @@ export const removePermissionFromRole = async (req, res) => {
 };
 
 /**
- * Check if role has specific permission
+ * Check if a role has a specific permission
  */
 export const checkRoleAccess = async (req, res) => {
     const { role_id, permission_name } = req.body;
-    
     if (!role_id || !permission_name || isNaN(role_id)) {
         return res.status(400).json({
             success: false,
@@ -88,7 +87,7 @@ export const checkRoleAccess = async (req, res) => {
     }
 
     const hasAccess = await checkAccess(parseInt(role_id), permission_name);
-    
+
     res.json({
         success: true,
         hasAccess: hasAccess,
@@ -97,25 +96,3 @@ export const checkRoleAccess = async (req, res) => {
     });
 };
 
-/**
- * Check if user has specific permission
- */
-export const checkUserPermissionAccess = async (req, res) => {
-    const { user_id, permission_name } = req.body;
-    
-    if (!user_id || !permission_name || isNaN(user_id)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Valid user_id and permission_name are required'
-        });
-    }
-
-    const hasAccess = await checkUserAccess(parseInt(user_id), permission_name);
-    
-    res.json({
-        success: true,
-        hasAccess: hasAccess,
-        user_id: parseInt(user_id),
-        permission_name: permission_name
-    });
-};

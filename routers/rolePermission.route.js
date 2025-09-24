@@ -5,8 +5,7 @@ import {
     getPermissionsByRoleId, 
     assignPermissionToRole, 
     removePermissionFromRole, 
-    checkRoleAccess, 
-    checkUserPermissionAccess 
+    checkRoleAccess,
 } from '../controllers/rolePermission.controller.js';
 import { simpleAuth } from '../utils/jwt.js';
 
@@ -23,8 +22,5 @@ router.delete('/', simpleAuth, requirePermission('manage_role_permissions'), asy
 
 // POST /api/role-permissions/check-access - Check if role has specific permission (requires read_role_permissions)
 router.post('/check-access', simpleAuth, requirePermission('read_role_permissions'), asyncHandler(checkRoleAccess));
-
-// POST /api/role-permissions/check-user-access - Check if user has specific permission (requires read_role_permissions)
-router.post('/check-user-access', simpleAuth, requirePermission('read_role_permissions'), asyncHandler(checkUserPermissionAccess));
 
 export default router;
