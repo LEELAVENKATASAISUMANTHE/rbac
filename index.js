@@ -16,7 +16,7 @@ app.listen(PORT, async () => {
   }
 });
 
-app.get('/',simpleAuth,async (req, res) => {
+app.get('/',async (req, res) => {
   console.log('Health check');
     res.send('Server is up and running for rbac');
 });
