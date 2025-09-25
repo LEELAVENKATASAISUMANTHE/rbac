@@ -1,7 +1,7 @@
 import express from 'express';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { requirePermission } from '../utils/authMiddleware.js';
-import { registerUser, getUserData, deleteUser } from '../controllers/user.controller.js';
+import { registerUser, getUserData, deleteUser, updateUser } from '../controllers/user.controller.js';
 
 const router = express.Router();
 
@@ -13,5 +13,8 @@ router.get('/me', requirePermission('read_users'), asyncHandler(getUserData));
 
 // DELETE /api/users/:id - delete user (requires delete_users)
 router.delete('/:id', requirePermission('delete_users'), asyncHandler(deleteUser));
+
+// PUT /api/users/:id - update user (requires update_users)
+router.put('/:id', requirePermission('update_users'), asyncHandler(updateUser));
 
 export default router;

@@ -35,4 +35,16 @@ const getallpermissions = async()=>{
     }
 };
 
-export { createpermission, getpermissionbyid, getallpermissions };
+const deletepermission = async(id)=>{
+    const client = await getclient();
+    try {
+        const res = await client.query("DELETE FROM permissions WHERE id = $1", [id]);
+        return res.rowCount > 0;
+    } catch (error) {
+        handlePostgresError(error);
+    } finally {
+        client.release();
+    }
+};
+
+export { createpermission, getpermissionbyid, getallpermissions, deletepermission };

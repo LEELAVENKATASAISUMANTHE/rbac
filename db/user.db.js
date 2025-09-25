@@ -61,3 +61,34 @@ export async function userbyemail(email) {
         client.release();
     }
 }
+
+export async function updateUserById(id, fields) {
+    const client = await getclient();
+    try {
+        // fetch existing user
+        const existingRes = await client.query('SELECT * FROM users WHERE id = $1', [id]);
+        if (existingRes.rows.length === 0) {
+            return { success: false, message: 'User not found' };
+        }
+        const existing = existingRes.rows[0];
+
+        const newName = fields.name || existing.name;
+        const newEmail = fields.email || existing.email;
+        const newRoleId = fields.role_id !== undefined ? fields.role_id : existing.role_id;
+
+        const res = await client.query(
+            'UPDATE users SET name = $1, email = $2, role_id = $3 WHERE id = $4 RETURNING id',
+            [newName, newEmail, newRoleId, id]
+        );
+
+        if (res.rowCount > 0) {
+            return { success: true, message: 'User updated successfully', id: res.rows[0].id };
+        }
+        return { success: false, message: 'Update failed' };
+    } catch (error) {
+        console.error('Error updating user:', error);
+        handlePostgresError(error);
+    } finally {
+        client.release();
+    }
+}

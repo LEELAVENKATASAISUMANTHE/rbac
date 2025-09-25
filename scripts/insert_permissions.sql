@@ -42,6 +42,9 @@ INSERT INTO permissions (name, description) VALUES
 INSERT INTO permissions (name, description) VALUES
 ('delete_users', 'Can delete users') ON CONFLICT (name) DO NOTHING;
 
+INSERT INTO permissions (name, description) VALUES
+('update_users', 'Can update users') ON CONFLICT (name) DO NOTHING;
+
 COMMIT;
 
 -- End of insert script

@@ -1,4 +1,4 @@
-import {createUsers,userbyemail,deleteUserById} from "../db/user.db.js";
+import {createUsers,userbyemail,deleteUserById, updateUserById} from "../db/user.db.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { hashPassword } from "../utils/hash.js";
 

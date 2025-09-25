@@ -1,4 +1,4 @@
-import { createpermission, getpermissionbyid, getallpermissions } from '../db/permission.db.js';
+import { createpermission, getpermissionbyid, getallpermissions,deletepermission } from '../db/permission.db.js';
 
 /**
  * Get all permissions
@@ -60,5 +60,27 @@ export const createPermission = async (req, res) => {
         success: true,
         message: 'Permission created successfully',
         data: newPermission
+    });
+};
+
+export const deletePermission = async (req, res) => {
+    const { id } = req.params;
+    if (!id || isNaN(id)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Valid permission ID is required'
+        });
+    }
+    const success = await deletepermission(parseInt(id));
+    if (!success) {
+        return res.status(404).json({
+            success: false,
+            message: 'Permission not found'
+        });
+    }
+
+    res.json({
+        success: true,
+        message: 'Permission deleted successfully'
     });
 };
