@@ -33,10 +33,3 @@ export const requireAnyPermission = (requiredPermissions) =>
     return next();
   });
 
-// Convenience aliases
-export const requireAdmin = requirePermission('admin_access');
-export const canReadUsers = requirePermission('read_users');
-export const canWriteUsers = requirePermission('write_users');
-export const canDeleteUsers = requirePermission('delete_users');
-export const canManageRoles = requirePermission('manage_roles');
-export const canManagePermissions = requirePermission('manage_permissions');
