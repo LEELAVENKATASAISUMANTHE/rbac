@@ -14,20 +14,29 @@ export const simpleAuth = (req, res, next) => {
     const token = authHeader.split(' ')[1];
     console.log("Token:", token);
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
           console.error('JWT verification error:', err);
             return res.status(403).json({
               success:false,
               message:'Invalid token',
-              erreor: err.message
+              error: err.message
             });
         }
-        req.user = {
-           id : user.id,
-          email: user.email,
-          role_id: user.role_id
+
+        // Normalize token payload to a consistent shape consumed by authMiddleware
+        // Some tokens include user fields at top-level, others nest under `user`.
+        const normalizedUser = decoded && decoded.user ? decoded.user : decoded;
+
+        // If role is provided as `role` (not role_id), copy it to role_id for consistency
+        if (normalizedUser && normalizedUser.role !== undefined && normalizedUser.role_id === undefined) {
+            normalizedUser.role_id = normalizedUser.role;
         }
+
+  // Attach normalized user at top-level so existing middleware can read req.user.role_id
+  req.user = normalizedUser;
+  // keep full decoded token available for handlers if needed
+  req.jwt = decoded;
         next();
     });
 };
