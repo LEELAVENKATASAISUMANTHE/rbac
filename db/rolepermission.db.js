@@ -7,6 +7,7 @@ const assignpermissiontorole = async(role_id, permission_id)=>{
         const res = await client.query("INSERT INTO rolepermissions (role_id, permission_id) VALUES ($1, $2) RETURNING *", [role_id, permission_id]);
         return res.rows[0];
     } catch (error) {
+        console.error('Error assigning permission to role:', error);
         handlePostgresError(error);
     } finally {
         client.release();
@@ -18,6 +19,7 @@ const removepermissionfromrole = async(role_id, permission_id)=>{
         const res = await client.query("DELETE FROM rolepermissions WHERE role_id = $1 AND permission_id = $2 RETURNING *", [role_id, permission_id]);
         return res.rows[0];
     } catch (error) {
+        console.error('Error removing permission from role:', error);
         handlePostgresError(error);
     } finally {
         client.release();
@@ -29,6 +31,7 @@ const getpermissionsbyroleid = async(role_id)=>{
         const res = await client.query("SELECT * FROM rolepermissions WHERE role_id = $1", [role_id]);
         return res.rows;
     } catch (error) {
+        console.error('Error fetching permissions for role:', error);
         handlePostgresError(error);
     } finally {
         client.release();
@@ -54,6 +57,7 @@ const checkAccess = async (user_role_id, requiredPermission) => {
         
         return count > 0; // Return true if permission exists, false otherwise
     } catch (error) {
+        console.error('Error checking access for role:', error);
         handlePostgresError(error);
         return false; // Return false on error
     } finally {

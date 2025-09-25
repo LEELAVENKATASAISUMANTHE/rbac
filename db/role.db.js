@@ -6,6 +6,7 @@ const getrolebyid = async(id)=>{
         const res = await client.query("SELECT * FROM roles WHERE id = $1", [id]);
         return res.rows[0];
     } catch (error) {
+        console.error('Error fetching role by ID:', error);
         handlePostgresError(error);
     } finally {
         client.release();
@@ -18,6 +19,7 @@ const createrole = async(name, description,is_active)=>{
         const res = await client.query("INSERT INTO roles (name, description, is_active) VALUES ($1, $2, $3) RETURNING *", [name, description, is_active]);
         return res.rows[0];
     } catch (error) {
+        console.error('Error creating role:', error);
         handlePostgresError(error);
     } finally {
         client.release();
@@ -33,6 +35,7 @@ const updaterole = async(id, name, description,is_active)=>{
         const res = await client.query("UPDATE roles SET name = $1, description = $2, is_active = $3 WHERE id = $4 RETURNING *", [name || existingRole.name, description || existingRole.description, is_active !== undefined ? is_active : existingRole.is_active, id]);
         return res.rows[0];
     } catch (error) {
+        console.error('Error updating role:', error);
         handlePostgresError(error);
     } finally {
         client.release();
@@ -48,6 +51,7 @@ const deleterole = async(id)=>{
         const res = await client.query("DELETE FROM roles WHERE id = $1 RETURNING *", [id]);
         return res.rows[0];
     } catch (error) {
+        console.error('Error deleting role:', error);
         handlePostgresError(error);
     } finally {
         client.release();
