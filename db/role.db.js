@@ -53,5 +53,18 @@ const deleterole = async(id)=>{
         client.release();
     }
 };
+const getallroles = async()=>{
+    const client = await getclient();
+    try {
+        const res = await client.query("SELECT * FROM roles ORDER BY id");
+        return res.rows;
+    }
+    catch (error) {
+        console.error('Error fetching roles:', error);
+        handlePostgresError(error);
+    }   finally {
+        client.release();
+    }
 
-export { getrolebyid, createrole, updaterole, deleterole };
+};
+export { getrolebyid, createrole, updaterole, deleterole, getallroles };

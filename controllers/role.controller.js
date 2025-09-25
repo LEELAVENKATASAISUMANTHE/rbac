@@ -1,4 +1,4 @@
-import { getrolebyid, createrole, updaterole, deleterole } from '../db/role.db.js';
+import { getrolebyid, createrole, updaterole, deleterole,getallroles } from '../db/role.db.js';
 
 /**
  * Get role by ID
@@ -93,4 +93,23 @@ export const deleteRole = async (req, res) => {
         message: 'Role deleted successfully',
         data: deletedRole
     });
+};
+
+export const getAllRoles = async (req, res) => {
+
+    try {
+         const roles = await getallroles();
+    res.json({
+        success: true,
+        data: roles
+    });
+        
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve roles',
+            error: error.message
+        });
+    }
+   
 };
