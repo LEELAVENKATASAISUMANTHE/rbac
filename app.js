@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import roleRouter from './routers/role.route.js';
 import permissionRouter from './routers/permission.route.js';
 import rolePermissionRouter from './routers/rolePermission.route.js';
+import userRouter from './routers/user.route.js';
 
 const app = express();
 app.use(cors());
@@ -17,7 +18,9 @@ app.use(cookieParser());
 const allowedOrigins = [
     'http://localhost:4001',
     'http://localhost:3000',
-    'http://localhost:5000'
+    'http://localhost:5000',
+    'https://api-gateway-1258.onrender.com',
+    'https://rbac-jb0z.onrender.com',
   ];
 app.set("trust proxy", 1);
 app.use(cors({
@@ -39,5 +42,6 @@ app.use(cors({
 app.use('/roles', roleRouter);
 app.use('/permissions', permissionRouter);
 app.use('/role-permissions', rolePermissionRouter);
+app.use('/users', userRouter);
 
 export default app;
