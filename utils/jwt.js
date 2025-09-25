@@ -23,7 +23,11 @@ export const simpleAuth = (req, res, next) => {
               erreor: err.message
             });
         }
-        req.user = user;
+        req.user = {
+           id : user.id,
+          email: user.email,
+          role_id: user.role_id
+        }
         next();
     });
 };
