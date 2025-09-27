@@ -7,8 +7,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-  "setup": "node setup.js",
-  "seed:permissions": "node scripts/seed_permissions.js",
+    "setup": "node setup.js",
+    "seed:permissions": "node scripts/seed_permissions.js",
+    "seed:admin": "node scripts/assign_admin_permissions.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
