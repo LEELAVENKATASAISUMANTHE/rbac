@@ -19,7 +19,7 @@ const allowedOrigins = [
     'http://localhost:4001',
     'http://localhost:3000',
     'http://localhost:5000',
-    'https://api-gateway-1258.onrender.com',
+    'https://api-gateway-ohmz.onrender.com',
     'https://rbac-jb0z.onrender.com',
     'https://frontend-for-placement.vercel.app'
   ];
