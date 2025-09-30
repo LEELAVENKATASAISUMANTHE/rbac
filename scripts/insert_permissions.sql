@@ -40,6 +40,9 @@ INSERT INTO permissions (name, description) VALUES
 ('read_users', 'Can read users') ON CONFLICT (name) DO NOTHING;
 
 INSERT INTO permissions (name, description) VALUES
+('read_user', 'Can read a specific user by ID') ON CONFLICT (name) DO NOTHING;
+
+INSERT INTO permissions (name, description) VALUES
 ('delete_users', 'Can delete users') ON CONFLICT (name) DO NOTHING;
 
 INSERT INTO permissions (name, description) VALUES

@@ -48,3 +48,11 @@ export const getUserData = asyncHandler(async (req, res) => {
     }
     return res.status(200).json({ route: req.originalUrl, success: true, data: user });
 });
+
+export const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await getUsers();
+    if (!users) {
+        return res.status(404).json({ route: req.originalUrl, success: false, message: "No users found" });
+    }
+    return res.status(200).json({ route: req.originalUrl, success: true, data: users });
+});

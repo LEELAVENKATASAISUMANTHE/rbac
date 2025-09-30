@@ -66,6 +66,10 @@ ON CONFLICT (role_id, permission_id) DO NOTHING;
 -- ON CONFLICT (role_id, permission_id) DO NOTHING;
 
 -- INSERT INTO rolepermissions (role_id, permission_id) 
+-- SELECT 1, id FROM permissions WHERE name = 'read_user' 
+-- ON CONFLICT (role_id, permission_id) DO NOTHING;
+
+-- INSERT INTO rolepermissions (role_id, permission_id) 
 -- SELECT 1, id FROM permissions WHERE name = 'update_users' 
 -- ON CONFLICT (role_id, permission_id) DO NOTHING;
 

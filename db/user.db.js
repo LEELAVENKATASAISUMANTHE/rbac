@@ -22,7 +22,9 @@ export async function createUsers(data) {
 export async function getUsers() {
     const client = await getclient();
     try {
-        const res = await client.query('SELECT * FROM users ORDER BY id');
+        // Explicitly list columns to exclude password
+        const res = await client.query('SELECT id, name, email, role_id FROM users ORDER BY id');
+
         return res.rows;
     } catch (error) {
         console.error('Error fetching users:', error);
