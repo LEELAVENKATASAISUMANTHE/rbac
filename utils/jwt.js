@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const simpleAuth = (req, res, next) => {
+     console.log("cookies",req.cookies);
+     console.log("headers",req.headers.cookies);
     const authHeader = req.headers.authorization;
     if (!authHeader) {
         return res.status(401).json({
