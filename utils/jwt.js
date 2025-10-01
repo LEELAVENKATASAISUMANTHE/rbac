@@ -3,20 +3,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const simpleAuth = (req, res, next) => {
-     console.log("cookies",req.cookies);
-     console.log("headers",req.headers.cookies);
-    const authHeader = req.headers.authorization;
+    const authHeader = req.cookies.accessToken;
     if (!authHeader) {
         return res.status(401).json({
           success:false,
-          message:'No authorization header provided'
+          message:'accessToken cookie not found'
         })
     }
 
-    const token = authHeader.split(' ')[1];
-    console.log("Token:", token);
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(authHeader, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
           console.error('JWT verification error:', err);
             return res.status(403).json({
