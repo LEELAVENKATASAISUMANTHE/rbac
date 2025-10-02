@@ -30,7 +30,7 @@ export const simpleAuth = (req, res, next) => {
         if (normalizedUser && normalizedUser.role !== undefined && normalizedUser.role_id === undefined) {
             normalizedUser.role_id = normalizedUser.role;
         }
-
+        console.log('Normalized user from token:', normalizedUser);
   // Attach normalized user at top-level so existing middleware can read req.user.role_id
   req.user = normalizedUser;
   // keep full decoded token available for handlers if needed

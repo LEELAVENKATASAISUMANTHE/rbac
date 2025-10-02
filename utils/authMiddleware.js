@@ -4,7 +4,7 @@ import { asyncHandler } from './asyncHandler.js';
 // Minimal, clear permission middlewares using role-based permission checks
 export const requirePermission = (requiredPermission) =>
   asyncHandler(async (req, res, next) => {
-    console.log('rq,user',req.user);
+    console.log('rq.user',req.user);
     if (!req.user) return res.status(401).json({ success: false, message: 'Authentication required' });
     if (!req.user.role_id) return res.status(403).json({ success: false, message: 'User role not found' });
 
