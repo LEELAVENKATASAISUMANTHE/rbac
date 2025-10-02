@@ -4,6 +4,7 @@ import { getrolebyid, createrole, updaterole, deleterole,getallroles } from '../
  * Get role by ID
  */
 export const getRoleById = async (req, res) => {
+    console.log("Get Role By ID Called");
     const { id } = req.params;
     
     if (!id || isNaN(id)) {
@@ -32,6 +33,7 @@ export const getRoleById = async (req, res) => {
  * Create new role
  */
 export const createRole = async (req, res) => {
+    console.log('Create Role Called');
     const { name, description, is_active = true } = req.body;
     
     if (!name) {
@@ -54,6 +56,7 @@ export const createRole = async (req, res) => {
  * Update role
  */
 export const updateRole = async (req, res) => {
+    console.log("Update Role Called");
     const { id } = req.params;
     const { name, description, is_active } = req.body;
     
@@ -77,6 +80,7 @@ export const updateRole = async (req, res) => {
  * Delete role
  */
 export const deleteRole = async (req, res) => {
+    console.log("Delete Role Called");
     const { id } = req.params;
     
     if (!id || isNaN(id)) {
@@ -96,7 +100,7 @@ export const deleteRole = async (req, res) => {
 };
 
 export const getAllRoles = async (req, res) => {
-
+console.log("Get All Roles Called");
     try {
          const roles = await getallroles();
     res.json({

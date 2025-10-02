@@ -4,6 +4,7 @@ import { createpermission, getpermissionbyid, getallpermissions,deletepermission
  * Get all permissions
  */
 export const getAllPermissions = async (req, res) => {
+    console.log("Get All Permissions Called");
     const permissions = await getallpermissions();
     
     res.json({
@@ -17,6 +18,7 @@ export const getAllPermissions = async (req, res) => {
  * Get permission by ID
  */
 export const getPermissionById = async (req, res) => {
+    console.log("Get Permission By ID Called");
     const { id } = req.params;
     
     if (!id || isNaN(id)) {
@@ -45,6 +47,7 @@ export const getPermissionById = async (req, res) => {
  * Create new permission
  */
 export const createPermission = async (req, res) => {
+    console.log('Create Permission Called');
     const { name, description } = req.body;
     
     if (!name) {
@@ -64,6 +67,7 @@ export const createPermission = async (req, res) => {
 };
 
 export const deletePermission = async (req, res) => {
+    console.log("Delete Permission Called");
     const { id } = req.params;
     if (!id || isNaN(id)) {
         return res.status(400).json({

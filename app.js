@@ -21,7 +21,7 @@ const allowedOrigins = [
     'http://localhost:5000',
     'http://localhost:5173',
     'https://api-gateway-ohmz.onrender.com',
-    'https://rbac-jb0z.onrender.com',
+    'https://rbac-fra1.onrender.com',
     'https://frontend-for-placement.vercel.app'
   ];
 app.set("trust proxy", 1);

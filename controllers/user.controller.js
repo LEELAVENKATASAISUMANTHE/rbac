@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { hashPassword } from "../utils/hash.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
+    console.log("Register User Called");
     const { name, email, password, role_id } = req.body;
     const hashedPassword = await hashPassword(password);
     const result = await createUsers({ name, email, password: hashedPassword, role_id });
@@ -14,6 +15,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 
 export const deleteUser = asyncHandler(async (req, res) => {
+    console.log("Delete User Called");
     const userId = req.params.id;
     try {
         const result = await deleteUserById(userId);
@@ -27,6 +29,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
 });
 
 export const updateUser = asyncHandler(async (req, res) => {
+    console.log("Update User Called");
     const userId = req.params.id;
     const { name, email, role_id } = req.body;
     try {
@@ -41,6 +44,7 @@ export const updateUser = asyncHandler(async (req, res) => {
 });
 
 export const getUserData = asyncHandler(async (req, res) => {
+    console.log("Get User Data Called");
     const userEmail = req.user.email;
     const user = await userbyemail(userEmail);
     if (!user) {
@@ -50,6 +54,7 @@ export const getUserData = asyncHandler(async (req, res) => {
 });
 
 export const getAllUsers = asyncHandler(async (req, res) => {
+    console.log("Get All Users Called");
     const users = await getUsers();
     if (!users) {
         return res.status(404).json({ route: req.originalUrl, success: false, message: "No users found" });
