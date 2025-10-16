@@ -56,6 +56,7 @@ export const getUserData = asyncHandler(async (req, res) => {
 export const getAllUsers = asyncHandler(async (req, res) => {
     console.log("Get All Users Called");
     const users = await getUsers();
+    
     if (!users) {
         return res.status(404).json({ route: req.originalUrl, success: false, message: "No users found" });
     }

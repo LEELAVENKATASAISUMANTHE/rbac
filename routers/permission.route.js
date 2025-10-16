@@ -1,6 +1,6 @@
 import express from 'express';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { requirePermission} from '../utils/authMiddleware.js';
+import { axiosauth, requirePermission} from '../utils/authMiddleware.js';
 import { getAllPermissions, getPermissionById, createPermission ,deletePermission } from '../controllers/permission.controller.js';
 import { simpleAuth } from '../utils/jwt.js';
 
@@ -16,4 +16,5 @@ router.get('/:id', simpleAuth, requirePermission('read_permissions_id'), asyncHa
 router.post('/', simpleAuth, requirePermission('create_permissions'), asyncHandler(createPermission));
 
 router.delete('/:id', simpleAuth, requirePermission('delete_permissions'), asyncHandler(deletePermission));
+router.get('/checkaccess/:type/:role_id', axiosauth);
 export default router;
