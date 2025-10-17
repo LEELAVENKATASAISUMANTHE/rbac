@@ -33,7 +33,7 @@ app.use(cors({
         callback(new Error('Not allowed by CORS'));
       }
     },
-     credentials: true, // Very important for sending cookies
+     credentials: true, // Very important for sending cookieshfeg;iyge
      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Or specific methods you use
     allowedHeaders: ['Content-Type', 'Authorization'] // Or specific headers you use
 
