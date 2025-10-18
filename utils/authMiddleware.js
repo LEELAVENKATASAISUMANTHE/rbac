@@ -31,8 +31,10 @@ export const requirePermission = (requiredPermission) =>
 
       const hasAccess = await checkAccess(Number(role_id), type);
       console.log("hasAccess", hasAccess);
-      if (hasAccess) 
-      res.status(200).json({ success: true, message: 'Access granted' });
+      if (hasAccess) {
+        return res.status(200).json({ success: true, message: 'Access granted' });
+      }
+      return res.status(403).json({ success: false, message: 'Access denied' });
     } catch (err) {
       console.error('Error in axiosauth middleware:', err);
       return res.status(500).json({ success: false, message: 'Internal server error in permission check' });
