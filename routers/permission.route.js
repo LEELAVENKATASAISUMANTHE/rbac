@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/', simpleAuth, requirePermission('read_permissions'), asyncHandler(getAllPermissions));
 
 // Simple access check endpoint (no auth) – keep this before dynamic ":id" routes
-router.get('/checkaccess/:type/:role_id', axiosauth);
+router.get('/checkaccess/:type/:role_id', simpleAuth, axiosauth);
 
 // GET /api/permissions/:id - Get permission by ID (requires read_permissions)
 router.get('/:id', simpleAuth, requirePermission('read_permissions_id'), asyncHandler(getPermissionById));
