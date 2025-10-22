@@ -94,3 +94,13 @@ export async function updateUserById(id, fields) {
         client.release();
     }
 }
+export const getuserbyid=async(id)=>{
+    const client =await getclient();
+    try {
+        const res = await client.query("SELECT * FROM users WHERE id = $1", [id]);
+        return res.rows[0];
+    } catch (error) {
+        handlePostgresError(error);
+    }finally{
+        client.release();
+    }       };

@@ -5,6 +5,7 @@ import roleRouter from './routers/role.route.js';
 import permissionRouter from './routers/permission.route.js';
 import rolePermissionRouter from './routers/rolePermission.route.js';
 import userRouter from './routers/user.route.js';
+import studentRouter from './routers/student.route.js';
 
 const app = express();
 app.use(cors());
@@ -45,5 +46,6 @@ app.use('/roles', roleRouter);
 app.use('/permissions', permissionRouter);
 app.use('/role-permissions', rolePermissionRouter);
 app.use('/users', userRouter);
+app.use('/students', studentRouter);
 
 export default app;
