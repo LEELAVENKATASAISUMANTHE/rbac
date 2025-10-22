@@ -7,6 +7,7 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs/promises";
 import path from "path";
 import { Console } from "console";
+import { get } from "http";
 
 // Full student schema (useful for responses / full validation), but create flow uses createStudentSchema below
 const studentSchema = joi.object({
@@ -274,4 +275,18 @@ export const deleteStudent = asyncHandler(async (req, res) => {
     }
 });
 
-export default { registerStudent, updateStudent, getAllStudents, deleteStudent };
+export const getstudentbyidcontroller = asyncHandler(async (req, res) => {
+    const studentid = req.params.id || req.user?.id;
+    if (!studentid) return res.status(400).json({ success: false, message: 'student id required' });
+
+    try {
+        const student = await getstudentbyid(studentid);
+        if (!student) return res.status(404).json({ success: false, message: 'student not found' });
+        return res.status(200).json({ success: true, student });
+    } catch (err) {
+        console.error('DB error fetching student:', err);
+        return res.status(500).json({ success: false, message: 'Failed to fetch student' });
+    }
+});
+
+export default { registerStudent, updateStudent, getAllStudents, deleteStudent,getstudentbyidcontroller };

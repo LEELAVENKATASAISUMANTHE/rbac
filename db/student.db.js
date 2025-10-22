@@ -70,4 +70,6 @@ const getallstudents=async()=>{
     }
 };
 
+
+
 export { createstudent, getstudentbyid, deletesudentbyid, updatestudentbyid, getallstudents };
