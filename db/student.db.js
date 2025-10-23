@@ -47,8 +47,11 @@ const deletesudentbyid=async(id)=>{
 const updatestudentbyid=async(id, data)=>{
     const client =await getclient();
     try {
-        const res = await client.query("UPDATE students SET offical_email = $1, personal_email = $2, resume = $3, LeetCode = $4, HackerRank = $5, HackerEarth = $6, linkedin = $7, CGPA = $8, created_at = $9, phone_number = $10 WHERE id = $11 RETURNING *", [data.offical_email, data.personal_email,data.resume,data.LeetCode,data.HackerRank,data.HackerEarth,data.linkedin,data.CGPA,data.created_at,data.phone_number, id]);
-        return {success:true, student: res.rows[0]};
+        const res = await client.query(
+            `UPDATE students SET offical_email = $1, personal_email = $2, resume = $3, "LeetCode" = $4, "HackerRank" = $5, "HackerEarth" = $6, linkedin = $7, "CGPA" = $8, created_at = $9, phone_number = $10 WHERE id = $11 RETURNING *`,
+            [data.offical_email, data.personal_email, data.resume, data.LeetCode, data.HackerRank, data.HackerEarth, data.linkedin, data.CGPA, data.created_at, data.phone_number, id]
+        );
+        return { success: true, student: res.rows[0] };
     } catch (error) {
         handlePostgresError(error);
         throw error;
