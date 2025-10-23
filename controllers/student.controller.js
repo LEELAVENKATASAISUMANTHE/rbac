@@ -57,7 +57,9 @@ cloudinary.config({
 export const registerStudent = asyncHandler(async (req, res) => {
     let student_resume;
     console.log("Register Student Called");
-    const studentid = req.params.id || req.user.id;
+    // allow id from params, or from multipart form-data (user_id), or from authenticated user
+    const normalizedForm = normalizeStudentForm(req.body);
+    const studentid = req.params.id || normalizedForm.user_id || req.user?.id;
     console.log("Student ID:", studentid);
     // verify user existence and role
     const verifyStudent = await getuserbyid(studentid);
@@ -69,9 +71,9 @@ export const registerStudent = asyncHandler(async (req, res) => {
         return res.status(403).json({ route: req.originalUrl, success: false, message: 'user is not allowed to register as student' });
     }
 
-    // Validate body first to avoid uploading if invalid
+    // Normalize and validate body first to avoid uploading if invalid
     // stripUnknown: true removes extra fields (for example if form-data contains an `id` field)
-    const { error: validationError, value: validatedBody } = createStudentSchema.validate(req.body, { abortEarly: false, stripUnknown: true });
+    const { error: validationError, value: validatedBody } = createStudentSchema.validate(normalizedForm, { abortEarly: false, stripUnknown: true });
     if (validationError) {
         return res.status(422).json({ route: req.originalUrl, success: false, errors: validationError.details.map(d => d.message) });
     }
@@ -102,7 +104,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
         try { if (req.file && req.file.path) await fs.unlink(path.resolve(req.file.path)); } catch (_) {}
     }
 
-    // Normalize email field name: accept `official_email` from client, but store as `offical_email` if DB expects that
+    // Normalize email field name: accept `official_email` from client
     const offical_email = validatedBody.offical_email || validatedBody.official_email;
     const { personal_email, LeetCode, HackerRank, HackerEarth, linkedin, CGPA, phone_number } = validatedBody;
 
@@ -155,15 +157,35 @@ function extractCloudinaryPublicId(url) {
     }
 }
 
+// Normalize various incoming form field names to the canonical keys used by the service
+function normalizeStudentForm(body) {
+    if (!body || typeof body !== 'object') return {};
+    return {
+        // accept both misspelled and correctly spelled variants
+        offical_email: body.offical_email || body.official_email || body.officialEmail || body['official email'] || null,
+        personal_email: body.personal_email || body.personalEmail || body['personal email'] || null,
+        // various casing possibilities for these fields
+        LeetCode: body.LeetCode || body.leetCode || body.leetcode || null,
+        HackerRank: body.HackerRank || body.hackerrank || body.HackerRank || null,
+        HackerEarth: body.HackerEarth || body.hackerearth || body.HackerEarth || null,
+        linkedin: body.linkedin || body.LinkedIn || body.linkedIn || null,
+        CGPA: body.CGPA !== undefined ? body.CGPA : (body.cgpa !== undefined ? body.cgpa : null),
+        phone_number: body.phone_number || body.phoneNumber || body['phone number'] || null,
+        // allow client to send id as user_id in form-data
+        user_id: body.user_id || body.userId || body.id || null
+    };
+}
+
 export const updateStudent = asyncHandler(async (req, res) => {
-    const studentid = req.params.id || req.user?.id;
+    const normalizedForm = normalizeStudentForm(req.body);
+    const studentid = req.params.id || normalizedForm.user_id || req.user?.id;
     if (!studentid) return res.status(400).json({ success: false, message: 'student id required' });
 
     const existing = await getstudentbyid(studentid);
     if (!existing) return res.status(404).json({ success: false, message: 'student not found' });
 
-    // Validate body (allow unknowns to be stripped)
-    const { error: validationError, value: validatedBody } = createStudentSchema.validate(req.body, { abortEarly: false, stripUnknown: true });
+    // Normalize and validate body (allow unknowns to be stripped)
+    const { error: validationError, value: validatedBody } = createStudentSchema.validate(normalizedForm, { abortEarly: false, stripUnknown: true });
     if (validationError) return res.status(422).json({ success: false, errors: validationError.details.map(d => d.message) });
 
     // If a new resume is provided, upload and delete old one
