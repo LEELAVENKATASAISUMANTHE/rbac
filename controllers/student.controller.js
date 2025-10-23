@@ -56,6 +56,7 @@ cloudinary.config({
 
 export const registerStudent = asyncHandler(async (req, res) => {
     let student_resume;
+    console.log("input data :", req.body);
     console.log("Register Student Called");
     // allow id from params, or from multipart form-data (user_id), or from authenticated user
     const normalizedForm = normalizeStudentForm(req.body);
@@ -103,6 +104,10 @@ export const registerStudent = asyncHandler(async (req, res) => {
         // Always attempt to clean up the local file once (if present)
         try { if (req.file && req.file.path) await fs.unlink(path.resolve(req.file.path)); } catch (_) {}
     }
+    console.log("Student Resume URL:", student_resume);
+
+
+    
 
     // Normalize email field name: accept `official_email` from client
     const offical_email = validatedBody.offical_email || validatedBody.official_email;
