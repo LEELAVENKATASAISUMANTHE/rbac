@@ -5,9 +5,28 @@ const createstudent=async(data)=>{
     const client =await getclient();
     try {
         const res = await client.query(
-            `INSERT INTO students (id, offical_email, personal_email, resume, "LeetCode", "HackerRank", "HackerEarth", linkedin, "CGPA", created_at, phone_number)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
-            [data.id, data.offical_email, data.personal_email, data.resume, data.LeetCode, data.HackerRank, data.HackerEarth, data.linkedin, data.CGPA, data.created_at, data.phone_number]
+            `INSERT INTO students (
+                id, offical_email, personal_email, resume,
+                "LeetCode", "HackerRank", "HackerEarth", linkedin,
+                tenth_percentage, twelfth_percentage, backlogs,
+                "CGPA", created_at, phone_number
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
+            [
+                data.id,
+                data.offical_email,
+                data.personal_email,
+                data.resume,
+                data.LeetCode,
+                data.HackerRank,
+                data.HackerEarth,
+                data.linkedin,
+                data.tenth_percentage,
+                data.twelfth_percentage,
+                data.backlogs,
+                data.CGPA,
+                data.created_at,
+                data.phone_number
+            ]
         );
         return res.rows[0];
     } catch (error) {
@@ -48,8 +67,36 @@ const updatestudentbyid=async(id, data)=>{
     const client =await getclient();
     try {
         const res = await client.query(
-            `UPDATE students SET offical_email = $1, personal_email = $2, resume = $3, "LeetCode" = $4, "HackerRank" = $5, "HackerEarth" = $6, linkedin = $7, "CGPA" = $8, created_at = $9, phone_number = $10 WHERE id = $11 RETURNING *`,
-            [data.offical_email, data.personal_email, data.resume, data.LeetCode, data.HackerRank, data.HackerEarth, data.linkedin, data.CGPA, data.created_at, data.phone_number, id]
+            `UPDATE students SET
+                offical_email = $1,
+                personal_email = $2,
+                resume = $3,
+                "LeetCode" = $4,
+                "HackerRank" = $5,
+                "HackerEarth" = $6,
+                linkedin = $7,
+                tenth_percentage = $8,
+                twelfth_percentage = $9,
+                backlogs = $10,
+                "CGPA" = $11,
+                created_at = $12,
+                phone_number = $13
+             WHERE id = $14 RETURNING *`,
+            [
+                data.offical_email,
+                data.personal_email,
+                data.resume,
+                data.LeetCode,
+                data.HackerRank,
+                data.HackerEarth,
+                data.linkedin,
+                data.tenth_percentage,
+                data.twelfth_percentage,
+                data.backlogs,
+                data.CGPA,
+                data.created_at,
+                data.phone_number,
+            ]
         );
         return { success: true, student: res.rows[0] };
     } catch (error) {
