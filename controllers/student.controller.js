@@ -14,6 +14,13 @@ cloudinary.config({
     secure: true
 });
 
+// Debug Cloudinary config (remove this after testing)
+console.log('Cloudinary config:', {
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? 'Set' : 'Missing',
+    api_key: process.env.CLOUDINARY_API_KEY ? 'Set' : 'Missing',
+    api_secret: process.env.CLOUDINARY_API_SECRET ? 'Set' : 'Missing'
+});
+
 const ALLOWED_RESUME_MIMES = ['application/pdf'];
 
 // --- Validation schemas
@@ -103,12 +110,15 @@ function extractCloudinaryPublicId(url) {
 export const registerStudent = asyncHandler(async (req, res) => {
     console.log('Raw request body:', req.body);
     console.log('Uploaded file:', req.file);
+    console.log('URL params:', req.params);
     const normalized = normalizeStudentForm(req.body);
     console.log('Normalized form data:', normalized);
     const studentid = req.params.id || normalized.user_id || req.user?.id;
     if (!studentid) return sendError(res, 400, 'student id required');
 
+    console.log('Looking for user with ID:', studentid);
     const user = await getuserbyid(studentid);
+    console.log('Found user:', user);
     if (!user) return sendError(res, 404, 'user does not exist');
     if (user.role_id !== 13) return sendError(res, 403, 'user is not allowed to register as student');
 
@@ -117,18 +127,34 @@ export const registerStudent = asyncHandler(async (req, res) => {
         delete normalized.resume;
     }
 
+    console.log('Starting validation...');
     const { error: validationError, value: validated } = createStudentSchema.validate(normalized, { abortEarly: false, stripUnknown: true });
-    if (validationError) return sendError(res, 422, 'validation failed', validationError.details.map(d => d.message));
+    console.log('Validation result:', validationError ? 'FAILED' : 'PASSED');
+    if (validationError) {
+        console.log('Validation errors:', validationError.details.map(d => d.message));
+        return sendError(res, 422, 'validation failed', validationError.details.map(d => d.message));
+    }
 
     let resumeUrl = validated.resume || null;
+    console.log('Initial resumeUrl from validation:', resumeUrl);
+    console.log('File upload info:', req.file ? 'File present' : 'No file');
+    
     if (req.file && req.file.path) {
+        console.log('Processing file upload...');
         if (req.file.mimetype && !ALLOWED_RESUME_MIMES.includes(req.file.mimetype)) {
             try { if (req.file && req.file.path) await fs.unlink(path.resolve(req.file.path)); } catch (_) {}
             return sendError(res, 415, 'Only PDF resumes are allowed');
         }
         try {
-            const upload = await cloudinary.uploader.upload(req.file.path, { folder: 'student_resumes', use_filename: true, unique_filename: true, resource_type: 'raw' });
+            console.log('Uploading to Cloudinary...');
+            const upload = await cloudinary.uploader.upload(req.file.path, { 
+                folder: 'student_resumes', 
+                use_filename: true, 
+                unique_filename: true, 
+                resource_type: 'raw' 
+            });
             resumeUrl = upload.secure_url;
+            console.log('Cloudinary upload successful:', resumeUrl);
         } catch (err) {
             console.error('Cloudinary upload failed', err);
             try { if (req.file && req.file.path) await fs.unlink(path.resolve(req.file.path)); } catch (_) {}
@@ -137,6 +163,8 @@ export const registerStudent = asyncHandler(async (req, res) => {
             try { if (req.file && req.file.path) await fs.unlink(path.resolve(req.file.path)); } catch (_) {}
         }
     }
+    
+    console.log('Final resumeUrl:', resumeUrl);
     if (!resumeUrl) return sendError(res, 400, 'resume is required (upload file or provide resume URL)');
 
     const payload = {
