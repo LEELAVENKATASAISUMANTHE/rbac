@@ -8,11 +8,11 @@ import { upload } from "../utils/multer.js";
 const router = express.Router();
 
 router.post('/register/:id', upload.single('resume'), asyncHandler(registerStudent));
-router.get('/', simpleAuth, asyncHandler(getAllStudents));
-router.get('/:id', simpleAuth, asyncHandler(getstudentbyidcontroller));
-
 // Get all students
 router.get('/', simpleAuth, asyncHandler(getAllStudents));
+
+// Get student by ID
+router.get('/:id', simpleAuth, asyncHandler(getstudentbyidcontroller));
 
 // Update student (optional resume replacement)
 router.put('/:id', simpleAuth, upload.single('resume'), asyncHandler(updateStudent));

@@ -26,8 +26,8 @@ const createStudentSchema = joi.object({
     tenth_percentage: joi.number().min(0).max(100).required(),
     twelfth_percentage: joi.number().min(0).max(100).required(),
     backlogs: joi.number().integer().min(0).required(),
-    // resume may be provided as a URL OR as a multipart file
-    resume: joi.string().uri().optional(),
+    // Don't validate resume here since it can come from file upload
+    resume: joi.string().optional().allow(''),
     LeetCode: joi.string().uri().required(),
     HackerRank: joi.string().uri().required(),
     HackerEarth: joi.string().uri().required(),
@@ -76,7 +76,7 @@ function normalizeStudentForm(body) {
         tenth_percentage: body.tenth_percentage !== undefined ? Number(body.tenth_percentage) : (body.tenthPercentage !== undefined ? Number(body.tenthPercentage) : null),
         twelfth_percentage: body.twelfth_percentage !== undefined ? Number(body.twelfth_percentage) : (body.twelfthPercentage !== undefined ? Number(body.twelfthPercentage) : null),
         backlogs: body.backlogs !== undefined ? Number(body.backlogs) : (body.backlog !== undefined ? Number(body.backlog) : null),
-        resume: body.resume || body.resume_url || null,
+        resume: (body.resume && typeof body.resume === 'string') ? body.resume : (body.resume_url || null),
         user_id: body.user_id || body.userId || body.id || null
     };
 }
@@ -102,6 +102,7 @@ function extractCloudinaryPublicId(url) {
 // --- Controllers
 export const registerStudent = asyncHandler(async (req, res) => {
     console.log('Raw request body:', req.body);
+    console.log('Uploaded file:', req.file);
     const normalized = normalizeStudentForm(req.body);
     console.log('Normalized form data:', normalized);
     const studentid = req.params.id || normalized.user_id || req.user?.id;
@@ -110,6 +111,11 @@ export const registerStudent = asyncHandler(async (req, res) => {
     const user = await getuserbyid(studentid);
     if (!user) return sendError(res, 404, 'user does not exist');
     if (user.role_id !== 13) return sendError(res, 403, 'user is not allowed to register as student');
+
+    // Remove resume from normalized data for validation if file is uploaded
+    if (req.file && req.file.path) {
+        delete normalized.resume;
+    }
 
     const { error: validationError, value: validated } = createStudentSchema.validate(normalized, { abortEarly: false, stripUnknown: true });
     if (validationError) return sendError(res, 422, 'validation failed', validationError.details.map(d => d.message));
